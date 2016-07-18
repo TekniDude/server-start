@@ -26,9 +26,9 @@ fi
 read -r -p "Do you want to proceed? [y/n] " response
 response=${response,,}    # tolower
 if [[ ! $response =~ ^(yes|y)$ ]]; then
+    echo "Goodbye!"
     exit 1
 fi
-echo "continue!"
 
 
 #
@@ -57,27 +57,29 @@ apt-get install -y git curl sudo fail2ban unattended-upgrades ufw
 
 
 #
-# TODO install and setup ufw
+# setup ufw - Uncomplicated Firewall
 #
 echo "Setting up ufw..."
 ufw default deny incoming
 ufw default allow outgoing
-ufw limit ssh
-ufw allow http
-ufw allow https
-ufw --force enable # enable and do not prompt for confirmation
+ufw limit ssh		# allow ssh in but rate limit
+ufw allow http		# allow http in
+ufw allow https		# allow https in
+ufw --force enable	# enable and do not prompt for confirmation
+
 
 #
 # motd script
 #
-wget -O - "http://wiki.jasonvolk.net/_export/code/vps/new_server?codeblock=2" > /etc/profile.d/motd.sh
+wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/motd.sh" > /etc/profile.d/motd.sh
 echo "Added motd.sh"
 
 
 #
 # color prompt
+# the .bashrc profile will override this
 #
-wget -O - "http://wiki.jasonvolk.net/_export/code/vps/new_server?codeblock=3" > /etc/profile.d/color_prompt.sh
+wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/color_prompt.sh" > /etc/profile.d/color_prompt.sh
 
 
 #
@@ -89,7 +91,7 @@ if [[ -n "$NEWUSER" ]]; then
     usermod $NEWUSER -a -G sudo
 
     # bash aliases
-    wget -O - "http://wiki.jasonvolk.net/_export/code/vps/new_server?codeblock=4" > /home/$NEWUSER/.bash_aliases
+    wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/bash_aliases.sh" > /home/$NEWUSER/.bash_aliases
     chown $NEWUSER:$NEWUSER /home/$NEWUSER/.bash_aliases
 
     # color_prompts
