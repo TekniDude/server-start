@@ -34,6 +34,14 @@ if [[ ! $response =~ ^(yes|y)$ ]]; then
     exit 1
 fi
 
+#
+# addline(line, file) function
+# Add line to file if it does not already exist.
+#
+function addline() {
+  grep -q -F "$1" "$2" || echo "$1" >> "$2"
+}
+
 
 #
 # set local timezone
@@ -91,16 +99,23 @@ echo "Added /etc/profile.d/color_prompt.sh"
 # add secondary user
 #
 if [[ -n "$NEWUSER" ]]; then
+    # create user account
     adduser --disabled-login --gecos "Login user" $NEWUSER
     # add user to sudo group
     usermod $NEWUSER -a -G sudo
 
     # bash aliases
     wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/bash_aliases.sh" > /home/$NEWUSER/.bash_aliases
-    chown $NEWUSER:$NEWUSER /home/$NEWUSER/.bash_aliases
+    chown $NEWUSER:$NEWUSER "/home/$NEWUSER/.bash_aliases"
 
     # color_prompts
     sed -i -e 's/#force_color_prompt/force_color_prompt/g' /home/$NEWUSER/.bashrc
+
+    # .nanorc
+    FILE="/home/$NEWUSER/.nanorc"
+    addline "set undo" "$FILE"
+    addline "set const" "$FILE"
+    chown $NEWUSER:$NEWUSER "$FILE"
 
     echo "New user $NEWUSER added. You must run 'passwd $NEWUSER' to set a password in order to use the account."
 fi
