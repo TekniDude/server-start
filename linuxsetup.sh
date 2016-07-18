@@ -1,17 +1,20 @@
 #!/bin/bash
 
 
-# VARIABLES
+# script config
 NEWUSER="tekni"
 TIMEZONE="America/New_York"
 
-MYVERSION="2016-07-18"
+
+# application variables
+APPVERSION="2016-07-18.2"
+SCRIPTURL="https://github.com/TekniDude/server-start/raw/master/scripts/"
 
 
 #
 # print intro
 #
-echo "Server Prep script by Jason@TekniDude.com $MYVERSION"
+echo "Server Prep script by Jason@TekniDude.com $APPVERSION"
 echo ""
 
 
@@ -83,7 +86,7 @@ ufw --force enable	# enable and do not prompt for confirmation
 #
 # motd script
 #
-wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/motd.sh" > /etc/profile.d/motd.sh
+wget -O - "${SCRIPTURL}/motd.sh" > /etc/profile.d/motd.sh
 echo "Added /etc/profile.d/motd.sh"
 
 
@@ -91,7 +94,7 @@ echo "Added /etc/profile.d/motd.sh"
 # color prompt
 # the .bashrc profile will override this
 #
-wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/color_prompt.sh" > /etc/profile.d/color_prompt.sh
+wget -O - "${SCRIPTURL}color_prompt.sh" > /etc/profile.d/color_prompt.sh
 echo "Added /etc/profile.d/color_prompt.sh"
 
 
@@ -105,7 +108,7 @@ if [[ -n "$NEWUSER" ]]; then
     usermod $NEWUSER -a -G sudo
 
     # bash aliases
-    wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/bash_aliases.sh" > /home/$NEWUSER/.bash_aliases
+    wget -O - "${SCRIPTURL}bash_aliases.sh" > /home/$NEWUSER/.bash_aliases
     chown $NEWUSER:$NEWUSER "/home/$NEWUSER/.bash_aliases"
 
     # color_prompts
