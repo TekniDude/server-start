@@ -40,7 +40,7 @@ fi
 #
 echo "$TIMEZONE" > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
-echo "Timezone set to $TIMEZONE""
+echo "Timezone set to $TIMEZONE"
 
 
 #
