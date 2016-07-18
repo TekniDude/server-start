@@ -1,7 +1,11 @@
 #!/bin/bash
 
-MYVERSION="2016-07-17"
+
+# VARIABLES
 NEWUSER="tekni"
+TIMEZONE="America/New_York"
+
+MYVERSION="2016-07-18"
 
 
 #
@@ -15,7 +19,7 @@ echo ""
 # check for root
 #
 if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root" 1>&2
+    echo "ERROR: This script must be run as root" 1>&2
     exit 1
 fi
 
@@ -34,9 +38,9 @@ fi
 #
 # set local timezone
 #
-echo "America/New_York" > /etc/timezone
+echo "$TIMEZONE" > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
-echo "Timezone set"
+echo "Timezone set to $TIMEZONE""
 
 
 #
@@ -72,7 +76,7 @@ ufw --force enable	# enable and do not prompt for confirmation
 # motd script
 #
 wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/motd.sh" > /etc/profile.d/motd.sh
-echo "Added motd.sh"
+echo "Added /etc/profile.d/motd.sh"
 
 
 #
@@ -80,6 +84,7 @@ echo "Added motd.sh"
 # the .bashrc profile will override this
 #
 wget -O - "https://github.com/TekniDude/server-start/raw/master/scripts/color_prompt.sh" > /etc/profile.d/color_prompt.sh
+echo "Added /etc/profile.d/color_prompt.sh"
 
 
 #
@@ -104,5 +109,4 @@ fi
 #
 # done
 #
-unset NEWUSER MYVERSION
 echo "Finished!"
