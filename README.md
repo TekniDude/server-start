@@ -1,12 +1,10 @@
 # server-start
 
-Run linuxsetup.sh to execute the program.
+Prep script to load default packages, setup bash, and secure. Packages include: git curl sudo fail2ban unattended-upgrades ufw
 
-<code bash>
-root@newhost# wget https://github.com/TekniDude/server-start/raw/master/linuxsetup.sh
-root@newhost# bash linuxsetup.sh
-</code>
+## Install
 
+Download the script and run linuxsetup.sh as root.
 
 ```bash
 root@newhost# wget https://github.com/TekniDude/server-start/raw/master/linuxsetup.sh
