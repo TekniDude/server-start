@@ -1,4 +1,5 @@
 # server-start
 
 Run linuxsetup.sh to execute the program.
-<code>sudo bash linuxsetup.sh</code>
+
+<code>root@newhost# bash linuxsetup.sh</code>
