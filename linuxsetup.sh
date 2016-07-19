@@ -106,6 +106,8 @@ if [[ -n "$NEWUSER" ]]; then
     adduser --disabled-login --gecos "Login user" $NEWUSER
     # add user to sudo group
     usermod $NEWUSER -a -G sudo
+    # restrict outside read to home directory
+    chmod 750 "/home/$NEWUSER"
 
     # bash aliases
     wget -O - "${SCRIPTURL}bash_aliases.sh" > /home/$NEWUSER/.bash_aliases
