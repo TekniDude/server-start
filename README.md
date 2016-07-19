@@ -7,6 +7,6 @@ Prep script to load default packages, setup bash, and secure. Packages include: 
 Download the script and run linuxsetup.sh as root.
 
 ```bash
-root@newhost# wget https://github.com/TekniDude/server-start/raw/master/linuxsetup.sh
-root@newhost# bash linuxsetup.sh
+# wget --no-check-certificate https://github.com/TekniDude/server-start/raw/master/linuxsetup.sh
+# bash linuxsetup.sh
 ```
