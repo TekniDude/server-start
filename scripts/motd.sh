@@ -13,8 +13,8 @@ Green="\033[0;32m"
 Nill="\033[0m"
 
 # Local vars
-Hostname=$(hostname -A|xargs)
-IP=$(ip addr show dev eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+Hostname=$(hostname -A | xargs -n1 | sort -u | xargs)
+IP=$(ip addr show dev eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
 OS=$(cat /etc/*version)
 
 # Displaying colorful info: hostname, OS, kernel and username.
@@ -23,7 +23,7 @@ source /etc/os-release
 #echo
 echo -e "$Green================================================================================$Blue
 Welcome to $White$Hostname $Blue($White$IP$Blue)
-This system is running $White$PRETTY_NAME$Blue OS: $White$OS$Blue
+This system is running $White$PRETTY_NAME$Blue Version $White$OS$Blue
 Kernel version $White$(uname -r)$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green================================================================================$Blue"
