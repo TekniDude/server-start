@@ -23,7 +23,7 @@ source /etc/os-release
 #echo
 echo -e "$Green================================================================================$Blue
 Welcome to $White$Hostname $Blue($White$IP$Blue)
-This system is running $White$PRETTY_NAME$Blue Version $White$OS$Blue
+This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
 Kernel version $White$(uname -r)$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green================================================================================$Blue"
