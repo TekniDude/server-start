@@ -16,6 +16,9 @@ Nill="\033[0m"
 Hostname=$(hostname -A | xargs -n1 | sort -u | xargs)
 IP=$(ip addr show dev eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
 OS=$(cat /etc/*version)
+UPTIME=$(uptime -p| cut -d' ' -f2-)
+MEMORY=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
+DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Displaying colorful info: hostname, OS, kernel and username.
 
@@ -24,7 +27,10 @@ source /etc/os-release
 echo -e "$Green================================================================================$Blue
 Welcome to $White$Hostname $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
-Kernel version $White$(uname -r)$Blue
+Kernel version: $White$(uname -rs)$Blue
+Memory usage:   $White$MEMORY$Blue
+Disk usage:     $White$DISK$Blue
+System uptime:  $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green================================================================================$Blue"
 #echo
