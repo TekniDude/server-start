@@ -17,6 +17,14 @@ Hostname=$(hostname -A | xargs -n1 | sort -u | xargs)
 IP=$(ip -4 addr show | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
 OS=$(cat /etc/*version)
 UPTIME=$(uptime -p| cut -d' ' -f2-)
+if [ -f /proc/uptime ]
+then
+  if [ "$(cut -d' ' -f2- /proc/uptime)" -le "60" ]
+  then
+    UPTIME="Just booted"
+  fi
+fi
+
 MEMORY=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
 DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
