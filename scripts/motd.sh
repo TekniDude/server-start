@@ -14,7 +14,7 @@ Nill="\033[0m"
 
 # Local vars
 Hostname=$(hostname -A | xargs -n1 | sort -u | xargs)
-IP=$(ip addr show dev eth0 | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
+IP=$(ip -4 addr show | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
 OS=$(cat /etc/*version)
 UPTIME=$(uptime -p| cut -d' ' -f2-)
 MEMORY=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
