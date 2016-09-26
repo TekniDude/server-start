@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Creates a colorful & informative "message of the day (motd)".
+# Creates a colorful & informative "message of the day (motd)"
 # Save as /etc/profile.d/motd.sh
-# Written by I. Attir.
-# http://www.good-linux-tips.com
+# Original script by I. Attir http://www.good-linux-tips.com
+# Version: 2016-09-26
 
 # Setting variables for ANSI colors
 
@@ -19,6 +19,7 @@ OS=$(cat /etc/*version)
 UPTIME=$(uptime -p| cut -d' ' -f2-)
 if [ -z "$UPTIME" ]
 then
+  # if uptime is blank show in seconds. (uptime -p is blank when boot time is <60s)
   UPTIME=$(awk '{print int($1)}' /proc/uptime)" seconds"
 fi
 
