@@ -12,10 +12,16 @@ Blue="\033[01;34m"
 Green="\033[0;32m"
 Nill="\033[0m"
 
+# Locale
+#export LANG=en_US.UTF-8
+#echo $(printf "%'d\n" 12345678)
+
+
 # Local vars
-Hostname=$(hostname -A | xargs -n1 | sort -u | xargs)
+HOSTNAME=$(hostname -A | xargs -n1 | sort -u | xargs)
 IP=$(ip -4 addr show | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
 OS=$(cat /etc/*version)
+KERNEL=$(uname -rs)
 UPTIME=$(uptime -p| cut -d' ' -f2-)
 if [ -z "$UPTIME" ]
 then
@@ -31,9 +37,9 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 source /etc/os-release
 #echo
 echo -e "$Green================================================================================$Blue
-Welcome to $White$Hostname $Blue($White$IP$Blue)
+Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
-Kernel version: $White$(uname -rs)$Blue
+Kernel version: $White$KERNEL$Blue
 Memory usage:   $White$MEMORY$Blue
 Disk usage:     $White$DISK$Blue
 System uptime:  $White$UPTIME$Blue

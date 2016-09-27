@@ -7,7 +7,7 @@ TIMEZONE="America/New_York"
 
 
 # application variables
-APPVERSION="2016-07-18.2"
+APPVERSION="2016-09-26"
 SCRIPTURL="https://github.com/TekniDude/server-start/raw/master/scripts/"
 
 
@@ -53,6 +53,17 @@ echo "$TIMEZONE" > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
 echo "Timezone set to $TIMEZONE"
 
+
+#
+# set default locale
+#
+# enable en_US.UTF-8 locale
+#sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+# generate locale files
+##locale-gen "en_US.UTF-8 UTF-8"
+#dpkg-reconfigure locales
+# update /etc/default/locale
+#update-locale LANG="en_US.UTF-8"
 
 #
 # apt update and dist-upgrade
