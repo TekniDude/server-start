@@ -3,7 +3,7 @@
 # Creates a colorful & informative "message of the day (motd)"
 # Save as /etc/profile.d/motd.sh
 # Original script by I. Attir http://www.good-linux-tips.com
-# Version: 2016-09-26
+SCRIPT_VERSION="2016-09-30"
 
 # Setting variables for ANSI colors
 
@@ -11,6 +11,7 @@ White="\033[01;37m"
 Blue="\033[01;34m"
 Green="\033[0;32m"
 Nill="\033[0m"
+Gray="\e[38;5;232m"
 
 # Locale
 #export LANG=en_US.UTF-8
@@ -36,7 +37,7 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 source /etc/os-release
 #echo
-echo -e "$Green================================================================================$Blue
+echo -e "$Green================================================================================$Blue	$Gray$0 v. $SCRIPT_VERSION$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
 Kernel version: $White$KERNEL$Blue
@@ -47,6 +48,7 @@ You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green================================================================================$Blue"
 #echo
 
+
 # Calling the "cowsay" program.
 
 #cowsay "Unauthorized use of this system is strictly prohibited!"
@@ -54,4 +56,5 @@ $Green==========================================================================
 echo -en $Nill
 #echo
 
-unset White Blue Green Nill
+#unset White Blue Green Nill
+exit 0
