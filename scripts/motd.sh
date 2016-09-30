@@ -5,8 +5,8 @@
 # Original script by I. Attir http://www.good-linux-tips.com
 SCRIPT_VERSION="2016-09-30"
 
-# Setting variables for ANSI colors
 
+# Setting variables for ANSI colors
 White="\033[01;37m"
 Blue="\033[01;34m"
 Green="\033[0;32m"
@@ -30,31 +30,33 @@ then
   UPTIME=$(awk '{print int($1)}' /proc/uptime)" seconds"
 fi
 
+# Hardware
+CPU=$(lscpu | grep -oP 'Model name:\s*\K.+')
+CPUs=$(grep -c ^processor /proc/cpuinfo)
+
+# Usage
 MEMORY=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
 DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Displaying colorful info: hostname, OS, kernel and username.
-
 source /etc/os-release
-#echo
 echo -e "$Green================================================================================$Blue	$Gray$0 v. $SCRIPT_VERSION$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
+Hardware:       ${White}${CPUs}${Blue}x ${White}${CPU}${Blue}
 Kernel version: $White$KERNEL$Blue
 Memory usage:   $White$MEMORY$Blue
 Disk usage:     $White$DISK$Blue
 System uptime:  $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green================================================================================$Blue"
-#echo
 
 
 # Calling the "cowsay" program.
-
 #cowsay "Unauthorized use of this system is strictly prohibited!"
 
+# Reset bash color
 echo -en $Nill
-#echo
 
-#unset White Blue Green Nill
+# Done
 exit 0
