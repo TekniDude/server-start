@@ -4,10 +4,11 @@
 # script config
 NEWUSER="tekni"
 TIMEZONE="America/New_York"
+PACKAGES="git curl sudo fail2ban unattended-upgrades ufw"
 
 
 # application variables
-APPVERSION="2016-09-26"
+APPVERSION="2016-09-30"
 SCRIPTURL="https://github.com/TekniDude/server-start/raw/master/scripts/"
 
 
@@ -74,7 +75,9 @@ apt-get update && apt-get dist-upgrade -y
 #
 # install favorite packages
 #
-apt-get install -y git curl sudo fail2ban unattended-upgrades ufw
+if [ -n "$PACKAGES" ]; then
+  apt-get install -y $PACKAGES
+fi
 
 
 #
@@ -140,4 +143,4 @@ fi
 #
 # done
 #
-echo "Finished!"
+echo "Finished! If the kernel updated you should reboot the system.)"
