@@ -43,8 +43,8 @@ source /etc/os-release
 echo -e "$Green================================================================================$Blue	$Gray$0 v. $SCRIPT_VERSION$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
-Hardware:       ${White}${CPUs}${Blue}x ${White}${CPU}${Blue}
 Kernel version: $White$KERNEL$Blue
+Hardware:       ${White}${CPUs}${Blue}x ${White}${CPU}${Blue}
 Memory usage:   $White$MEMORY$Blue
 Disk usage:     $White$DISK$Blue
 System uptime:  $White$UPTIME$Blue
