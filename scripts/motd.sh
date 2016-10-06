@@ -3,7 +3,7 @@
 # Creates a colorful & informative "message of the day (motd)"
 # Save as /etc/profile.d/motd.sh
 # Original script by I. Attir http://www.good-linux-tips.com
-SCRIPT_VERSION="2016-09-30"
+SCRIPT_VERSION="2016-10-06"
 
 
 # Setting variables for ANSI colors
