@@ -31,8 +31,9 @@ then
 fi
 
 # Hardware
-CPU=$(lscpu | grep -oP 'Model name:\s*\K.+')
-CPUs=$(grep -c ^processor /proc/cpuinfo)
+#CPU_NAME=$(lscpu | grep -oP 'Model name:\s*\K.+')
+CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 4-)
+CPU_NUM=$(grep -c ^processor /proc/cpuinfo)
 
 # Usage
 MEMORY=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
@@ -44,7 +45,7 @@ echo -e "$Green=================================================================
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
 Kernel version: $White$KERNEL$Blue
-Hardware:       ${White}${CPUs}${Blue}x ${White}${CPU}${Blue}
+Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue}
 Memory usage:   $White$MEMORY$Blue
 Disk usage:     $White$DISK$Blue
 System uptime:  $White$UPTIME$Blue
