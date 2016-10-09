@@ -3,7 +3,7 @@
 # Creates a colorful & informative "message of the day (motd)"
 # Save as /etc/profile.d/motd.sh
 # Original script by I. Attir http://www.good-linux-tips.com
-SCRIPT_VERSION="2016-10-06"
+SCRIPT_VERSION="2016-10-09"
 
 
 # Setting variables for ANSI colors
@@ -20,6 +20,9 @@ Gray="\e[38;5;232m"
 
 # Local vars
 HOSTNAME=$(hostname -A | xargs -n1 | sort -u | xargs)
+if [ -z "$HOSTNAME" ]; then
+  HOSTNAME=$(hostname -f)
+fi
 IP=$(ip -4 addr show | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
 OS=$(cat /etc/*version)
 KERNEL=$(uname -rs)
