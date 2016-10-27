@@ -3,7 +3,7 @@
 # Creates a colorful & informative "message of the day (motd)"
 # Save as /etc/profile.d/motd.sh
 # Original script by I. Attir http://www.good-linux-tips.com
-SCRIPT_VERSION="2016-10-09"
+SCRIPT_VERSION="2016-10-27"
 
 
 # Setting variables for ANSI colors
@@ -35,7 +35,7 @@ fi
 
 # Hardware
 #CPU_NAME=$(lscpu | grep -oP 'Model name:\s*\K.+')
-CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 4-)
+CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 3-)
 CPU_NUM=$(grep -c ^processor /proc/cpuinfo)
 
 # Usage
