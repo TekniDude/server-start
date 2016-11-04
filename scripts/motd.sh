@@ -11,7 +11,7 @@ White="\033[01;37m"
 Blue="\033[01;34m"
 Green="\033[0;32m"
 Nill="\033[0m"
-Gray="\e[38;5;232m"
+Gray="\e[38;5;233m"
 
 # Locale
 #export LANG=en_US.UTF-8
