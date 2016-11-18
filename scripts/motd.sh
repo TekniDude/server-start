@@ -1,10 +1,12 @@
-#!/bin/bash
-
 # Creates a colorful & informative "message of the day (motd)"
 # Save as /etc/profile.d/motd.sh
 # Original script by I. Attir http://www.good-linux-tips.com
-SCRIPT_VERSION="2016-10-27"
+# Update by Jason Volk <jason@teknidude.com>
 
+(  # run in a subshell() to keep vars out of main BASH scope
+
+SCRIPT_VERSION="2016-11-18"
+SCRIPT_MSG="\t${BASH_ARGV:=$0} v. $SCRIPT_VERSION"
 
 # Setting variables for ANSI colors
 White="\033[01;37m"
@@ -18,14 +20,20 @@ Gray="\e[38;5;233m"
 #echo $(printf "%'d\n" 12345678)
 
 
-# Local vars
+# Get hostname
 HOSTNAME=$(hostname -A | xargs -n1 | sort -u | xargs)
 if [ -z "$HOSTNAME" ]; then
   HOSTNAME=$(hostname -f)
 fi
+
+# Get all IPs
 IP=$(ip -4 addr show | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | xargs)
+
+# Get system & kernel version
 OS=$(cat /etc/*version)
 KERNEL=$(uname -rs)
+
+# Get uptime
 UPTIME=$(uptime -p| cut -d' ' -f2-)
 if [ -z "$UPTIME" ]
 then
@@ -44,7 +52,7 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Displaying colorful info: hostname, OS, kernel and username.
 source /etc/os-release
-echo -e "$Green================================================================================$Blue	$Gray$0 v. $SCRIPT_VERSION$Blue
+echo -e "$Green================================================================================$Blue$Gray$SCRIPT_MSG$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
 Kernel version: $White$KERNEL$Blue
@@ -55,6 +63,7 @@ System uptime:  $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green================================================================================$Blue"
 
+TEST="var should be unset"
 
 # Calling the "cowsay" program.
 #cowsay "Unauthorized use of this system is strictly prohibited!"
@@ -64,3 +73,4 @@ echo -en $Nill
 
 # Done
 #exit 0
+)
