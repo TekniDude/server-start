@@ -43,7 +43,7 @@ fi
 
 # Hardware
 #CPU_NAME=$(lscpu | grep -oP 'Model name:\s*\K.+')
-CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 3-)
+CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 3- | xargs)
 CPU_NUM=$(grep -c ^processor /proc/cpuinfo)
 CPU_SOCKETS=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 
