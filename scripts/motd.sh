@@ -5,7 +5,7 @@
 
 (  # run in a subshell() to keep vars out of main BASH scope
 
-SCRIPT_VERSION="2016-11-18"
+SCRIPT_VERSION="2016-12-06"
 SCRIPT_MSG="\t${BASH_ARGV:=$0} v. $SCRIPT_VERSION"
 
 # Setting variables for ANSI colors
