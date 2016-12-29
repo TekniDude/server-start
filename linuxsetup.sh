@@ -90,11 +90,23 @@ fi
 
 
 #
-# TODO install and setup unattended-upgrades
+# setup unattended-upgrades
 #
 checkPkg "unattended-upgrades"
 if [ $? -eq 1 ]; then
   echo "Setting up unattended-upgrades..."
+  cat > /etc/apt/apt.conf.d/20auto-upgrades <<EOF
+// Enable the update/upgrade script (0=disable)
+APT::Periodic::Enable "1";
+// Do "apt-get update" automatically every n-days (0=disable)
+APT::Periodic::Update-Package-Lists "1";
+// Do "apt-get upgrade --download-only" every n-days (0=disable)
+APT::Periodic::Download-Upgradeable-Packages "1";
+// Run the "unattended-upgrade" security upgrade script every n-days (0=disabled)
+APT::Periodic::Unattended-Upgrade "1";
+// Do "apt-get autoclean" every n-days (0=disable)
+APT::Periodic::AutocleanInterval "7";
+EOF
 fi
 
 
@@ -114,9 +126,22 @@ fi
 
 
 #
+# logwatch
+#
+#checkPkg "logwatch"
+#if [ $? -eq 1 ]; then
+#  echo "Setting up logwatch..."
+#  addline "Range = between -7 days and -1 days" "/etc/logwatch/conf/logwatch.conf"
+#  addline "Output = html" "/etc/logwatch/conf/logwatch.conf"
+#  #addline "" "/etc/logwatch/conf/logwatch.conf"
+#  mv /etc/cron.daily/00logwatch /etc/cron.weekly/
+#fi
+
+
+#
 # motd script
 #
-wget -O - "${SCRIPTURL}/motd.sh" > /etc/profile.d/motd.sh
+wget -O - "${SCRIPTURL}motd.sh" > /etc/profile.d/motd.sh
 echo "Added /etc/profile.d/motd.sh"
 
 
@@ -159,4 +184,4 @@ fi
 #
 # done
 #
-echo "Finished! If the kernel updated you should reboot the system.)"
+echo "Finished! If the kernel updated you should reboot the system."
