@@ -48,6 +48,14 @@ function addline() {
 
 
 #
+# checkPkg(package) function
+# Check if package is installed.
+#
+function checkPkg() {
+  return dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed"
+}
+
+#
 # set local timezone
 #
 echo "$TIMEZONE" > /etc/timezone
