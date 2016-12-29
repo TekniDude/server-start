@@ -31,7 +31,7 @@ fi
 #
 # confirm
 #
-read -r -p "Do you want to proceed? [y/n] " response
+read -r -p "Do you want to proceed? [y/N] " response
 response=${response,,}    # tolower
 if [[ ! $response =~ ^(yes|y)$ ]]; then
     echo "Goodbye!"
@@ -52,8 +52,9 @@ function addline() {
 # Check if package is installed.
 #
 function checkPkg() {
-  return dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed"
+  return $(dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -c "ok installed")
 }
+
 
 #
 # set local timezone
@@ -91,18 +92,25 @@ fi
 #
 # TODO install and setup unattended-upgrades
 #
+checkPkg "unattended-upgrades"
+if [ $? -eq 1 ]; then
+  echo "Setting up unattended-upgrades..."
+fi
 
 
 #
 # setup ufw - Uncomplicated Firewall
 #
-echo "Setting up ufw..."
-ufw default deny incoming
-ufw default allow outgoing
-ufw limit ssh		# allow ssh in but rate limit
-ufw allow http		# allow http in
-ufw allow https		# allow https in
-ufw --force enable	# enable and do not prompt for confirmation
+checkPkg "ufw"
+if [ $? -eq 1 ]; then
+  echo "Setting up ufw..."
+  ufw default deny incoming
+  ufw default allow outgoing
+  ufw limit ssh		# allow ssh in but rate limit
+  ufw allow http	# allow http in
+  ufw allow https	# allow https in
+  ufw --force enable	# enable and do not prompt for confirmation
+fi
 
 
 #
