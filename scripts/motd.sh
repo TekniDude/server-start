@@ -59,7 +59,6 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Displaying colorful info: hostname, OS, kernel and username.
 source /etc/os-release
-hr() { printf '=%.0s' $(seq $COLUMNS); }
 echo -e "$Green$HR$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue) $Gray$SCRIPT_MSG$Blue
@@ -71,8 +70,6 @@ System uptime:  $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green$HR$Blue"
 
-TEST="var should be unset"
-
 # Calling the "cowsay" program.
 #cowsay "Unauthorized use of this system is strictly prohibited!"
 
@@ -80,5 +77,5 @@ TEST="var should be unset"
 echo -en $Nill
 
 # Done
-#exit 0
+return
 )

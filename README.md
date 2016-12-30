@@ -14,6 +14,8 @@ Download the script and run linuxsetup.sh as root.
 
 ## motd only
 
+![MOTD screenshot](https://cloud.githubusercontent.com/assets/16631012/21559324/6cf14984-ce18-11e6-96f7-f91d510a9f02.png)
+
 If you only want to update the motd script then run this:
 
 ```bash
