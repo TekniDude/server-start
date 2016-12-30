@@ -3,9 +3,10 @@
 # Original script by I. Attir http://www.good-linux-tips.com
 # Update by Jason Volk <jason@teknidude.com>
 
+
 (  # run in a subshell() to keep vars out of main BASH scope
 
-SCRIPT_VERSION="2016-12-06"
+SCRIPT_VERSION="2016-12-29"
 SCRIPT_MSG="\t${BASH_ARGV:=$0} v. $SCRIPT_VERSION"
 
 # Setting variables for ANSI colors
@@ -14,6 +15,11 @@ Blue="\033[01;34m"
 Green="\033[0;32m"
 Nill="\033[0m"
 Gray="\e[38;5;233m"
+
+# Horizontal rule across terminal
+COLS=$(tput cols)
+#COLUMNS=${COLUMNS:-80}
+HR=$(printf '=%.0s' $(seq $COLS))
 
 # Locale
 #export LANG=en_US.UTF-8
@@ -53,16 +59,17 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Displaying colorful info: hostname, OS, kernel and username.
 source /etc/os-release
-echo -e "$Green================================================================================$Blue$Gray$SCRIPT_MSG$Blue
+hr() { printf '=%.0s' $(seq $COLUMNS); }
+echo -e "$Green$HR$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
-This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
+This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue) $Gray$SCRIPT_MSG$Blue
 Kernel version: $White$KERNEL$Blue
 Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
 Memory usage:   $White$MEMORY$Blue
 Disk usage:     $White$DISK$Blue
 System uptime:  $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
-$Green================================================================================$Blue"
+$Green$HR$Blue"
 
 TEST="var should be unset"
 
