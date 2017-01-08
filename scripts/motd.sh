@@ -4,10 +4,12 @@
 # Update by Jason Volk <jason@teknidude.com>
 
 
-(  # run in a subshell() to keep vars out of main BASH scope
+function motd() (  # run in a subshell() to keep vars out of main BASH scope
 
 SCRIPT_VERSION="2016-12-29"
-SCRIPT_MSG="\t${BASH_ARGV:=$0} v. $SCRIPT_VERSION"
+#SCRIPT_MSG="\t${BASH_ARGV:=$0} v. $SCRIPT_VERSION"
+SCRIPT_MSG=""
+
 
 # Setting variables for ANSI colors
 White="\033[01;37m"
@@ -79,3 +81,6 @@ echo -en $Nill
 # Done
 return
 )
+
+# call motd function
+motd
