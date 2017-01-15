@@ -85,5 +85,8 @@ echo -en $Nill
 return 0
 )
 
-# call motd function
-motd
+
+# call motd function if running interactive mode
+if [ -n "$BASH_VERSION" -a -n "$PS1" ]; then
+  motd
+fi
