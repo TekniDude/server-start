@@ -6,10 +6,13 @@
 
 function motd() (  # run in a subshell() to keep vars out of main BASH scope
 
-SCRIPT_VERSION="2016-12-29"
-#SCRIPT_MSG="\t${BASH_ARGV:=$0} v. $SCRIPT_VERSION"
-SCRIPT_MSG=""
+SCRIPT_VERSION="2017-01-14"
 
+if [[ "$1" == "-v" || "$1" == "--version" ]]; then
+  echo "${BASH_ARGV:=${BASH_SOURCE:=$0}} version $SCRIPT_VERSION"
+  echo "Created by Jason Volk. https://github.com/TekniDude/server-start"
+  return 0
+fi
 
 # Setting variables for ANSI colors
 White="\033[01;37m"
@@ -63,7 +66,7 @@ DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 source /etc/os-release
 echo -e "$Green$HR$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
-This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue) $Gray$SCRIPT_MSG$Blue
+This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
 Kernel version: $White$KERNEL$Blue
 Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
 Memory usage:   $White$MEMORY$Blue
@@ -79,7 +82,7 @@ $Green$HR$Blue"
 echo -en $Nill
 
 # Done
-return
+return 0
 )
 
 # call motd function
