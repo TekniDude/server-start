@@ -4,11 +4,11 @@
 # script config
 NEWUSER="tekni"
 TIMEZONE="America/New_York"
-PACKAGES="git curl sudo fail2ban unattended-upgrades ufw"
+PACKAGES="git curl sudo fail2ban unattended-upgrades ufw logwatch libdate-manip-perl"
 
 
 # application variables
-APPVERSION="2016-09-30"
+APPVERSION="2018-06-18"
 SCRIPTURL="https://github.com/TekniDude/server-start/raw/master/scripts/"
 
 
@@ -59,9 +59,11 @@ function checkPkg() {
 #
 # set local timezone
 #
-echo "$TIMEZONE" > /etc/timezone
-dpkg-reconfigure -f noninteractive tzdata
-echo "Timezone set to $TIMEZONE"
+if [ -n "$TIMEZONE" ]; then
+  echo "$TIMEZONE" > /etc/timezone
+  dpkg-reconfigure -f noninteractive tzdata
+  echo "Timezone set to $TIMEZONE"
+fi
 
 
 #
@@ -173,7 +175,7 @@ if [[ -n "$NEWUSER" ]]; then
 
     # .nanorc
     FILE="/home/$NEWUSER/.nanorc"
-    addline "set undo" "$FILE"
+    #addline "set undo" "$FILE"
     addline "set const" "$FILE"
     chown $NEWUSER:$NEWUSER "$FILE"
 
