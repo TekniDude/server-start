@@ -6,7 +6,7 @@
 
 function motd() (  # run in a subshell() to keep vars out of main BASH scope
 
-SCRIPT_VERSION="2017-01-14"
+SCRIPT_VERSION="2017-04-01"
 
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
   echo "${BASH_ARGV:=${BASH_SOURCE:=$0}} version $SCRIPT_VERSION"
@@ -50,6 +50,11 @@ if [ -z "$UPTIME" ]
 then
   # if uptime is blank show in seconds. (uptime -p is blank when boot time is <60s)
   UPTIME=$(awk '{print int($1)}' /proc/uptime)" seconds"
+fi
+UPSECS=$(cut -f1 -d'.' /proc/uptime)
+UPSECS=$((UPSECS/60/60/24))
+if [ "$UPSECS" -gt "7" ]; then
+  UPTIME="$UPTIME ($UPSECS days)"
 fi
 
 # Hardware
