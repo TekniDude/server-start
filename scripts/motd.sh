@@ -6,7 +6,7 @@
 
 function motd() (  # run in a subshell() to keep vars out of main BASH scope
 
-SCRIPT_VERSION="2017-04-01"
+SCRIPT_VERSION="2018-06-18"
 
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
   echo "${BASH_ARGV:=${BASH_SOURCE:=$0}} version $SCRIPT_VERSION"
@@ -46,8 +46,7 @@ KERNEL=$(uname -rs)
 
 # Get uptime
 UPTIME=$(uptime -p| cut -d' ' -f2-)
-if [ -z "$UPTIME" ]
-then
+if [ -z "$UPTIME" ]; then
   # if uptime is blank show in seconds. (uptime -p is blank when boot time is <60s)
   UPTIME=$(awk '{print int($1)}' /proc/uptime)" seconds"
 fi
@@ -64,7 +63,8 @@ CPU_NUM=$(grep -c ^processor /proc/cpuinfo)
 CPU_SOCKETS=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 
 # Usage
-MEMORY=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
+MEMORY=$(free -m | grep Mem | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
+SWAP=$(free -m | grep Swap | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
 DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Displaying colorful info: hostname, OS, kernel and username.
@@ -72,11 +72,11 @@ source /etc/os-release
 echo -e "$Green$HR$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
-Kernel version: $White$KERNEL$Blue
-Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
-Memory usage:   $White$MEMORY$Blue
-Disk usage:     $White$DISK$Blue
-System uptime:  $White$UPTIME$Blue
+Kernel version:    $White$KERNEL$Blue
+Hardware:          ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
+Memory/Swap usage: $White$MEMORY$Blue / $White$SWAP$Blue
+Disk usage:        $White$DISK$Blue
+System uptime:     $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green$HR$Blue"
 
