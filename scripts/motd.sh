@@ -72,11 +72,11 @@ source /etc/os-release
 echo -e "$Green$HR$Blue
 Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
 This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
-Kernel version:    $White$KERNEL$Blue
-Hardware:          ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
-Memory/Swap usage: $White$MEMORY$Blue / $White$SWAP$Blue
-Disk usage:        $White$DISK$Blue
-System uptime:     $White$UPTIME$Blue
+Kernel version: $White$KERNEL$Blue
+Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
+Memory/swap:    $White$MEMORY$Blue / $White$SWAP$Blue
+Disk usage:     $White$DISK$Blue
+System uptime:  $White$UPTIME$Blue
 You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
 $Green$HR$Blue"
 
