@@ -9,4 +9,4 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 # other used aliases
-alias aptup='sudo apt update && sudo apt full-upgrade'
+alias aptup='sudo apt update && apt list --upgradable && sudo apt full-upgrade'

@@ -6,7 +6,7 @@
 
 function motd() (  # run in a subshell() to keep vars out of main BASH scope
 
-SCRIPT_VERSION="2018-06-18"
+SCRIPT_VERSION="2018-08-15"
 
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
   echo "${BASH_ARGV:=${BASH_SOURCE:=$0}} version $SCRIPT_VERSION"
