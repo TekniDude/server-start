@@ -24,10 +24,12 @@ SCRIPTURL="https://github.com/TekniDude/server-start/raw/master/scripts/"
 #
 # bash color variables
 #
-C_RST="\e[0m"
-C_RED="\e[31m"
-C_DIM="\e[2m"
-C_UND="\e[4m"
+C_RST="\e[0m"       # reset
+C_RED="\e[31m"      # red
+C_DIM="\e[2m"       # dim
+C_UND="\e[4m"       # underline
+C_YLW="\e[33m"      # yellow
+C_ASK=$C_YLW
 
 
 #
@@ -81,8 +83,8 @@ function addline() {
 #
 ## Run apt update?
 #
-echo
-read -r -p "Update system? ($APT_UPGRADE) [Y/n] " response
+echo -e -n "\n${C_ASK}Update system?${C_RST} ($APT_UPGRADE) [Y/n] "
+read -r response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -94,8 +96,8 @@ fi
 #
 ## Install basic packages?
 #
-echo
-read -r -p "Install basic packages? ($PACKAGES_BASIC) [Y/n] " response
+echo -e -n "\n${C_ASK}Install basic packages?${C_RST} ($PACKAGES_BASIC) [Y/n] "
+read -r response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -107,8 +109,8 @@ fi
 #
 # Install extra packages?
 #
-echo
-read -r -p "Install extra packages? ($PACKAGES_EXTRA) [y/N] " response
+echo -e -n "\n${C_ASK}Install extra packages?${C_RST} ($PACKAGES_EXTRA) [y/N] "
+read -r response
 response=${response:-N}     # default
 response=${response,,}      # tolower
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -120,8 +122,8 @@ fi
 #
 # MOTD script
 #
-echo
-read -r -p "Install MOTD script? [Y/n] " response
+echo -e -n "\n${C_ASK}Install MOTD script?${C_RST} [Y/n] "
+read -r  response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -141,8 +143,8 @@ fi
 #
 # Add 2nd user?
 #
-echo
-read -r -p "Add primary working user? ($NEWUSER) [Y/n] " response
+echo -e -n "\n${C_ASK}Add primary working user?${C_RST} ($NEWUSER) [Y/n] "
+read -r response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -186,8 +188,8 @@ fi
 #
 # Set local timezone?
 #
-echo
-read -r -p "Update system timezone? ($TIMEZONE) [Y/n] " response
+echo -e -n "\n${C_ASK}Update system timezone?${C_RST} ($TIMEZONE) [Y/n] "
+read -r response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -207,7 +209,7 @@ fi
 # TBD
 #
 
-
+echo -e "\n${C_ASK}Setting up remaining packages and defaults...${C_RST}"
 
 #
 # Set default locale
@@ -276,4 +278,4 @@ fi
 #
 # Done
 #
-echo "Finished! If the kernel was updated you should reboot the system."
+echo -e "${C_ASK}Finished!${C_RST} If the kernel was updated you should reboot the system."

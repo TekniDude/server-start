@@ -9,13 +9,13 @@ Download the script and run linuxsetup.sh as root.
 ```bash
 Run as root
 
-Download first:
+Download first and run:
 # wget https://github.com/TekniDude/server-start/raw/master/linuxsetup.sh
 # bash linuxsetup.sh
 
 or
 
-Pipe to bash:
+Pipe direct to bash:
 # wget -q -O - https://github.com/TekniDude/server-start/raw/master/linuxsetup.sh | bash
 ```
 
