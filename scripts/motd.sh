@@ -4,13 +4,14 @@
 # Update by Jason Volk <jason@teknidude.com>
 
 
-function motd() (  # run in a subshell() to keep vars out of main BASH scope
+function motd() (  # Run in a subshell() for easy calling. Also keep vars out of main BASH scope
 
-SCRIPT_VERSION="2018-08-15"
+SCRIPT_VERSION="2020-11-15"
 
+# Print script version info if flag is passed
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
-  echo "${BASH_ARGV:=${BASH_SOURCE:=$0}} version $SCRIPT_VERSION"
-  echo "Created by Jason Volk. https://github.com/TekniDude/server-start"
+  echo "${BASH_SOURCE[0]} version $SCRIPT_VERSION"
+  echo "Created by Jason Volk <jason@teknidude.com> https://github.com/TekniDude/server-start"
   return 0
 fi
 
@@ -29,7 +30,6 @@ HR=$(printf '=%.0s' $(seq $COLS))
 # Locale
 #export LANG=en_US.UTF-8
 #echo $(printf "%'d\n" 12345678)
-
 
 # Get hostname
 HOSTNAME=$(hostname -A | xargs -n1 | sort -u | xargs)
@@ -56,6 +56,9 @@ if [ "$UPSECS" -gt "7" ]; then
   UPTIME="$UPTIME ($UPSECS days)"
 fi
 
+# Get system avg load
+LOAD=$(cut -f1,2,3 -d' ' /proc/loadavg)
+
 # Hardware
 #CPU_NAME=$(lscpu | grep -oP 'Model name:\s*\K.+')
 CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 3- | xargs)
@@ -65,23 +68,27 @@ CPU_SOCKETS=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 # Usage
 MEMORY=$(free -m | grep Mem | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
 SWAP=$(free -m | grep Swap | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
-DISK=$(df -h | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
+DISK=$(df -h / | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
-# Displaying colorful info: hostname, OS, kernel and username.
+# Current user
+USER=$(whoami)
+TTY=$(tty)
+
+# Pull in current OS variables from release file
 source /etc/os-release
-echo -e "$Green$HR$Blue
-Welcome to $White$HOSTNAME $Blue($White$IP$Blue)
-This system is running $White$PRETTY_NAME$Blue (Version: $White$OS$Blue)
-Kernel version: $White$KERNEL$Blue
-Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
-Memory/swap:    $White$MEMORY$Blue / $White$SWAP$Blue
-Disk usage:     $White$DISK$Blue
-System uptime:  $White$UPTIME$Blue
-You're currently logged in as $White$(whoami) $Blue($White$(tty)$Blue)
-$Green$HR$Blue"
 
-# Calling the "cowsay" program.
-#cowsay "Unauthorized use of this system is strictly prohibited!"
+# Print out the motd message
+echo -e "${Green}${HR}${Blue}
+Welcome to ${White}${HOSTNAME} ${Blue}(${White}${IP}${Blue})
+This system is running ${White}$PRETTY_NAME${Blue} (Version: ${White}$OS${Blue})
+Kernel version: ${White}${KERNEL}${Blue}
+Hardware:       ${White}${CPU_NUM}${Blue}x ${White}${CPU_MODEL}${Blue} (${White}${CPU_SOCKETS} sockets${Blue})
+Memory/swap:    ${White}${MEMORY}${Blue} / ${White}$SWAP${Blue}
+Disk usage:     ${White}${DISK}${Blue}
+System uptime:  ${White}${UPTIME}${Blue}
+Average load:   ${White}${LOAD}${Blue}
+You're currently logged in as ${White}${USER} ${Blue}(${White}${TTY}${Blue})
+${Green}${HR}${Blue}"
 
 # Reset bash color
 echo -en $Nill
