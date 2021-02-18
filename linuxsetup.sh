@@ -7,7 +7,7 @@
 #
 NEWUSER="tekni"                 # working user to add
 TIMEZONE="America/New_York"     # local timezone
-PACKAGES_BASIC="sudo"           # pacakges to install
+PACKAGES_BASIC="sudo"           # packages to install
 #PACKAGES_EXTRA="git curl fail2ban unattended-upgrades ufw logwatch libdate-manip-perl"
 PACKAGES_EXTRA="git curl ufw"                                           # suggested packages to install
 APT_UPGRADE="dist-upgrade"                                              # apt mode for upgrade
@@ -26,6 +26,7 @@ SCRIPTURL="https://github.com/TekniDude/server-start/raw/master/scripts/"
 #
 C_RST="\e[0m"       # reset
 C_RED="\e[31m"      # red
+C_GREEN="\e[32m"    # green
 C_DIM="\e[2m"       # dim
 C_UND="\e[4m"       # underline
 C_YLW="\e[33m"      # yellow
@@ -48,6 +49,34 @@ echo -e "${C_DIM}Created by: Jason Volk <jason@teknidude.com> github.com/teknidu
 # update timezone?
 # setup packages
 
+usage()
+{
+    echo "Usage: $0 [-u username] [-p packages]"
+    echo
+    echo "OPTIONS"
+    echo "  -u username     Create a new user with this username."
+    echo '  -p package      Install this extra package.'
+    echo '  -p "packages"   Install these extra packages.'
+    exit 2
+}
+
+# testing
+while getopts "u:p:?h" flag
+do
+    case "${flag}" in
+        u ) NEWUSER=${OPTARG};;
+        p ) PACKAGES_EXTRA=${OPTARG};;
+        h|? ) usage;;
+        #\? ) echo "Invalid option: $OPTARG" 1>&2;exit 1;;
+        : ) echo "Invalid option: $OPTARG requires an argument" 1>&2; exit 1;;
+    esac
+done
+echo "Username: $NEWUSER";
+echo "Packages: $PACKAGES_EXTRA";
+echo
+
+
+#exit 1
 
 #
 # Check for root
@@ -83,7 +112,7 @@ function addline() {
 #
 ## Run apt update?
 #
-echo -e -n "\n${C_ASK}Update system?${C_RST} ($APT_UPGRADE) [Y/n] "
+echo -e -n "${C_ASK}Update system?${C_RST} ($APT_UPGRADE) [Y/n] "
 read -r response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
@@ -96,7 +125,7 @@ fi
 #
 ## Install basic packages?
 #
-echo -e -n "\n${C_ASK}Install basic packages?${C_RST} ($PACKAGES_BASIC) [Y/n] "
+echo -e -n "${C_ASK}Install basic packages?${C_RST} ($PACKAGES_BASIC) [Y/n] "
 read -r response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
@@ -109,7 +138,7 @@ fi
 #
 # Install extra packages?
 #
-echo -e -n "\n${C_ASK}Install extra packages?${C_RST} ($PACKAGES_EXTRA) [y/N] "
+echo -e -n "${C_ASK}Install extra packages?${C_RST} ($PACKAGES_EXTRA) [y/N] "
 read -r response
 response=${response:-N}     # default
 response=${response,,}      # tolower
@@ -122,7 +151,7 @@ fi
 #
 # MOTD script
 #
-echo -e -n "\n${C_ASK}Install MOTD script?${C_RST} [Y/n] "
+echo -e -n "${C_ASK}Install MOTD script?${C_RST} [Y/n] "
 read -r  response
 response=${response:-Y}     # default
 response=${response,,}      # tolower
@@ -141,47 +170,59 @@ fi
 
 
 #
-# Add 2nd user?
+# Add 2nd user
+# Run after packages are installed for sudo
 #
-echo -e -n "\n${C_ASK}Add primary working user?${C_RST} ($NEWUSER) [Y/n] "
-read -r response
-response=${response:-Y}     # default
-response=${response,,}      # tolower
-if [[ $response =~ ^(yes|y)$ ]]; then
-    if ! id "$NEWUSER" &>/dev/null; then
-        # Create user account
-        adduser --disabled-login --gecos "Login user" $NEWUSER
-        echo "New user added."
+if [ ! -z "$NEWUSER" ]; then
+    echo -e -n "${C_ASK}Add primary working user?${C_RST} ($NEWUSER) [Y/n] "
+    read -r response
+    response=${response:-Y}     # default
+    response=${response,,}      # tolower
+    if [[ $response =~ ^(yes|y)$ ]]; then
+        # check for existing username (or username as UID)
+        if ! id "$NEWUSER" &>/dev/null; then
+            # Create user account
+            adduser --disabled-login --gecos "Login user" $NEWUSER
 
-        # Give user sudo access if installed
-        checkPkg "sudo"
-        if [ $? -eq 1 ]; then
-            # add user to sudo group
-            usermod $NEWUSER -a -G sudo
-            echo "User added to sudo group."
+            # check exit code for error
+            if [ $? -ne 0 ]; then
+                echo -e "${C_RED}Error adding user.${C_RST}"
+            else
+                echo -e "${C_GREEN}New user added.${C_RST}"
+
+                # Give user sudo access if installed
+                checkPkg "sudo"
+                if [ $? -eq 1 ]; then
+                    # add user to sudo group
+                    usermod $NEWUSER -a -G sudo
+                    echo -e "${C_GREEN}User added to sudo group.${C_RST}"
+                fi
+
+                # Restrict outside read to home directory
+                chmod 750 "/home/$NEWUSER"
+                echo -e "${C_GREEN}User home chmod to 750.${C_RST}"
+
+                # Download favorite bash aliases
+                wget -O - "${SCRIPTURL}bash_aliases.sh" > /home/$NEWUSER/.bash_aliases && chown $NEWUSER:$NEWUSER "/home/$NEWUSER/.bash_aliases" && echo -e "${C_GREEN}User aliases added.${C_RST}"
+
+                # Force color_prompt
+                sed -i -e 's/#force_color_prompt/force_color_prompt/g' /home/$NEWUSER/.bashrc && echo -e "${C_GREEN}User color prompts on.${C_RST}"
+
+                # Update history size
+                sed -i -e "s/HISTSIZE=.*/HISTSIZE=10000/" .bashrc
+                sed -i -e "s/HISTFILESIZE=.*/HISTFILESIZE=20000/" .bashrc
+                echo -e "${C_GREEN}History size expanded.${C_RST}"
+
+                #echo "New user $NEWUSER added. You must run 'passwd $NEWUSER' to set a password in order to use the account."
+                echo "Set the password for the new user:"
+                passwd $NEWUSER
+            fi
+        else
+            echo -e "${C_YLW}New user skipped: User already exists on system.${C_RST}"
         fi
-
-        # Restrict outside read to home directory
-        chmod 750 "/home/$NEWUSER"
-        echo "User home chmod to 750."
-
-        # Download favorite bash aliases
-        wget -O - "${SCRIPTURL}bash_aliases.sh" > /home/$NEWUSER/.bash_aliases && chown $NEWUSER:$NEWUSER "/home/$NEWUSER/.bash_aliases" && echo "User aliases added."
-
-        # Force color_prompt
-        sed -i -e 's/#force_color_prompt/force_color_prompt/g' /home/$NEWUSER/.bashrc && echo "User color prompts on."
-
-        # Update history size
-        sed -i -e "s/HISTSIZE=.*/HISTSIZE=10000/" .bashrc
-        sed -i -e "s/HISTFILESIZE=.*/HISTFILESIZE=20000/" .bashrc
-        echo "History size expanded."
-
-        #echo "New user $NEWUSER added. You must run 'passwd $NEWUSER' to set a password in order to use the account."
-        echo "Set the password for the new user:"
-        passwd $NEWUSER
-    else
-        echo "New user skipped: User already exists on system."
     fi
+else
+    echo "Skipping new user"
 fi
 
 
@@ -197,7 +238,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
         #echo "$TIMEZONE" > /etc/timezone
         #dpkg-reconfigure -f noninteractive tzdata
         timedatectl set-timezone $TIMEZONE
-        echo "Timezone set to $TIMEZONE"
+        echo -e "${C_GREEN}Timezone set to ${TIMEZONE}${C_RST}"
     else
         echo "Timezone skipped!"
     fi
@@ -278,4 +319,4 @@ fi
 #
 # Done
 #
-echo -e "${C_ASK}Finished!${C_RST} If the kernel was updated you should reboot the system."
+echo -e "${C_GREEN}Finished!${C_RST} If the kernel was updated you should reboot the system."

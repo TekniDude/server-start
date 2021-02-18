@@ -53,7 +53,8 @@ fi
 UPSECS=$(cut -f1 -d'.' /proc/uptime)
 UPSECS=$((UPSECS/60/60/24))
 if [ "$UPSECS" -gt "7" ]; then
-  UPTIME="$UPTIME ($UPSECS days)"
+  # Display day count only if over a week
+  UPTIME="$UPTIME ${Blue}(${White}$UPSECS days${Blue})${White}"
 fi
 
 # Get system avg load
