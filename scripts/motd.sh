@@ -6,7 +6,7 @@
 
 function motd() (  # Run in a subshell() for easy calling. Also keep vars out of main BASH scope
 
-SCRIPT_VERSION="2020-11-15"
+SCRIPT_VERSION="2021-08-27"
 
 # Print script version info if flag is passed
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
@@ -63,12 +63,19 @@ LOAD=$(cut -f1,2,3 -d' ' /proc/loadavg)
 # Hardware
 #CPU_NAME=$(lscpu | grep -oP 'Model name:\s*\K.+')
 CPU_MODEL=$(grep -m 1 "model name" /proc/cpuinfo|cut -d' ' -f 3- | xargs)
+if [ -z "$CPU_MODEL" ]; then
+  CPU_MODEL=$(dpkg --print-architecture)
+fi
 CPU_NUM=$(grep -c ^processor /proc/cpuinfo)
 CPU_SOCKETS=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 
 # Usage
 MEMORY=$(free -m | grep Mem | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
-SWAP=$(free -m | grep Swap | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
+if [ "grep SwapTotal /proc/meminfo | cut -d':' -f2|xargs|cut -d' ' -f1" -gt "0" ]; then
+  SWAP=$(free -m | grep Swap | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
+else
+  SWAP="None"
+fi
 DISK=$(df -h / | awk '$NF=="/"{printf "%s/%s (%s)\n", $3,$2,$5}')
 
 # Current user
