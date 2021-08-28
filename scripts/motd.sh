@@ -6,6 +6,10 @@
 
 function motd() (  # Run in a subshell() for easy calling. Also keep vars out of main BASH scope
 
+# Strict errors
+set -e
+
+# Version
 SCRIPT_VERSION="2021-08-27"
 
 # Print script version info if flag is passed
@@ -71,7 +75,7 @@ CPU_SOCKETS=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 
 # Usage
 MEMORY=$(free -m | grep Mem | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
-if [ "grep SwapTotal /proc/meminfo | cut -d':' -f2|xargs|cut -d' ' -f1" -gt "0" ]; then
+if [ $(grep SwapTotal /proc/meminfo | cut -d':' -f2|xargs|cut -d' ' -f1) -gt "0" ]; then
   SWAP=$(free -m | grep Swap | awk '{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2}')
 else
   SWAP="None"
